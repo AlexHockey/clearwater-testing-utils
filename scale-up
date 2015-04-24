@@ -1,0 +1,10 @@
+#!/bin/bash
+
+source scaling-utils.sh
+
+banner "Start scale up"
+start_sprout_memcached
+start_cluster_scale_up
+dns_scale_up
+finish_cluster_scale_up
+banner "Finished scale up"

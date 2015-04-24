@@ -1,0 +1,30 @@
+#!/bin/bash
+
+source scaling-utils.sh
+
+log()
+{
+  echo " ($(date)): $@"
+}
+
+num_servers=2
+count=0
+
+while true; do
+
+  count=$(( $count + 1 ))
+
+  ix=$(( RANDOM % $num_servers  + 1 ))
+  node="$chef_env-sprout-$ix"
+  log "Killing memcached on $node (#$count)"
+  knife_ssh "name:$node" "sudo pkill -KILL -u memcache memcached"
+  log "Memcached killed"
+
+  # Sleep for a bit to allow astaire to start a resync
+  sleep 25
+
+  knife_ssh "name:$node" "sudo service astaire wait-sync"
+  log "Resync complete on $node (#$count)"
+
+  sleep 10
+done

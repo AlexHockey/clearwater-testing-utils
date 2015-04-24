@@ -1,0 +1,26 @@
+#!/bin/bash
+
+count=0
+
+log()
+{
+  echo " ($(date)): $@"
+}
+
+while true; do
+  count=$(( $count + 1 ))
+  echo $count
+  echo "============================================"
+  log "Scaling up #$count"
+  ./scale-up
+  log "Scaling up complete #$count"
+  echo "============================================"
+  sleep 60
+
+  echo "============================================"
+  log "Scaling down #$count"
+  ./scale-down
+  log "Scaling down complete #$count"
+  echo "============================================"
+  sleep 60
+done
